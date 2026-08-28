@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Pour citer ce dépôt, utiliser les métadonnées ci-dessous."
+title: "06-risk-engine-ca : VaR et Expected Shortfall backtestés sur un portefeuille canadien"
+authors:
+  - family-names: Vaudescal
+    given-names: Guillaume
+year: 2026
+url: "https://github.com/Guilou001/06-risk-engine-ca"
+repository-code: "https://github.com/Guilou001/06-risk-engine-ca"
+license: MIT
