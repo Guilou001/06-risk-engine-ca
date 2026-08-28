@@ -39,7 +39,7 @@ def fig_var_cone(returns: pd.Series, var_hist: pd.Series, var_fhs: pd.Series,
     fig, ax = plt.subplots(figsize=(10, 4.6))
     r = returns.reindex(var_fhs.index)
     ax.plot(r.index, 100 * r, color="0.75", linewidth=0.5, label="Rendement quotidien")
-    ax.plot(var_hist.index, -100 * var_hist, color=OKABE_ITO[0], label="VaR 99 % historique (250 j)")
+    ax.plot(var_hist.index, -100 * var_hist, color=OKABE_ITO[0], label="VaR 99 % historique (500 j)")
     ax.plot(var_fhs.index, -100 * var_fhs, color=OKABE_ITO[3], linewidth=1.0,
             label="VaR 99 % simulation historique filtrée")
     hits = r[r < -var_fhs]
@@ -93,7 +93,7 @@ def fig_reactivity(returns: pd.Series, forecasts: dict[str, pd.DataFrame], start
     ax.yaxis.set_major_formatter(fr)
     ax.xaxis.set_major_locator(mdates.MonthLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
-    ax.set_title("Mars 2020 : l'EWMA et la FHS suivent le choc en quelques jours, l'historique en un an")
+    ax.set_title("Mars 2020 : l'EWMA et la FHS suivent le choc en quelques jours, l'historique reste figé deux ans")
     ax.legend(loc="lower right", fontsize=9)
     fig.savefig(dest)
     plt.close(fig)

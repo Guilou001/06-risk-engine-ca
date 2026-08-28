@@ -95,7 +95,7 @@ régénérés par `uv run rke backtest` ; 5 476 jours communs, novembre 2004 à 
 | Modèle | Dépassements (54,8 attendus) | Taux | p Kupiec | p indépendance | VaR moyenne |
 |---|---:|---:|---:|---:|---:|
 | **FHS** | **69** | **1,26 %** | **0,063** | 0,012 | 1,62 % |
-| Historique | 89 | 1,63 % | 0,000 | 0,000 | 1,75 % |
+| Historique | 89 | 1,63 % | 0,000 | 0,000 | 1,74 % |
 | Student-t | 89 | 1,63 % | 0,000 | 0,000 | 1,78 % |
 | GARCH(1,1) normal | 121 | 2,21 % | 0,000 | 0,192 | 1,29 % |
 | EWMA | 128 | 2,34 % | 0,000 | 0,277 | 1,30 % |
@@ -108,7 +108,7 @@ trop ; les modèles à queue riche mais niveau figé (historique, Student) ont l
 de dépassements mais les font en grappes (p d'indépendance nulle), le pire moment possible. Ensuite,
 la FHS, qui combine queue empirique et volatilité EWMA, est la seule à passer Kupiec ; son p
 d'indépendance de 0,012 reste sous 5 %, aucun modèle n'est parfait et c'est écrit. Enfin, le prix
-de la prudence se lit dans la dernière colonne : l'historique immobilise une VaR moyenne de 1,75 %
+de la prudence se lit dans la dernière colonne : l'historique immobilise une VaR moyenne de 1,74 %
 pour échouer quand même, la FHS fait mieux avec 1,62 %.
 
 ![Cône de VaR et dépassements](results/figures/cone_var.png)
@@ -116,8 +116,8 @@ pour échouer quand même, la FHS fait mieux avec 1,62 %.
 Comment lire cette figure : le trait gris est le rendement quotidien du portefeuille, les deux
 courbes sont moins la VaR 99 % annoncée la veille (historique en bleu, FHS en vermillon), et chaque
 triangle un jour où la perte a traversé la VaR de la FHS. La courbe historique forme des marches :
-elle descend après les crises et reste basse un an, le temps que la fenêtre de 250 jours oublie ;
-la courbe FHS descend pendant la crise et remonte quelques semaines après.
+elle descend après les crises et reste basse environ deux ans, le temps que la fenêtre de 500 jours
+oublie ; la courbe FHS descend pendant la crise et remonte quelques semaines après.
 
 ![Feux tricolores de Bâle](results/figures/feux_bale.png)
 
@@ -131,14 +131,15 @@ le gaussien cumule six années rouges. C'est le tableau qu'un comité de risque 
 
 Comment lire cette figure : les barres grises sont les rendements quotidiens de janvier à septembre
 2020, les courbes moins la VaR 99 % de trois modèles. L'historique (bleu) met deux semaines à
-réagir puis reste figé à 3,3 % jusqu'en 2021 ; l'EWMA et la FHS plongent avec le choc (la FHS
-jusqu'à 13 %) puis reviennent en quelques mois. La VaR historique est en retard dans les deux sens :
-trop basse pendant la crise, trop haute longtemps après.
+réagir puis reste figé à 3,2 % jusqu'en mars 2022 ; l'EWMA et la FHS plongent avec le choc (la FHS
+jusqu'à 13,5 %) puis reviennent en quelques mois. La VaR historique est en retard dans les deux
+sens : trop basse pendant la crise, trop haute longtemps après.
 
-Sur l'Expected Shortfall à 97,5 %, le niveau de la FRTB : même classement (`backtests_es975.csv`),
-la FHS affiche le Z2 le plus proche de zéro (−0,16) et un ratio perte réalisée sur ES annoncé de
-0,98 les jours de dépassement, contre 1,36 pour le gaussien, qui sous-estime donc ses pertes de
-queue d'un bon tiers.
+Sur l'Expected Shortfall à 97,5 %, le niveau de la FRTB (`backtests_es975.csv`) : la FHS reste
+première (158 dépassements pour 136,9 attendus, p = 0,075) et le gaussien dernier, le Student
+reculant derrière le GARCH ; la FHS affiche le Z2 le plus proche de zéro (−0,16) et un ratio perte
+réalisée sur ES annoncé de 0,97 les jours de dépassement, contre 1,36 pour le gaussien, qui
+sous-estime donc ses pertes de queue d'un bon tiers.
 
 ## 6. Reproduire
 
