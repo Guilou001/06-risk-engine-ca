@@ -5,7 +5,7 @@ Ce dépôt mesure le risque du portefeuille équilibré canadien du dépôt
 d'Expected Shortfall, puis les fait juger par les quatre backtests que les régulateurs utilisent :
 Kupiec, Christoffersen, les feux tricolores de Bâle année par année, et Acerbi-Székely pour l'ES.
 
-[![ci](https://github.com/Guilou001/06-risk-engine-ca/actions/workflows/ci.yml/badge.svg)](https://github.com/Guilou001/06-risk-engine-ca/actions/workflows/ci.yml)
+[![ci](https://github.com/Guilou001/06-risque-marche/actions/workflows/ci.yml/badge.svg)](https://github.com/Guilou001/06-risque-marche/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![licence](https://img.shields.io/badge/code-MIT-green)
 

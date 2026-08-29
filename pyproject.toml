@@ -27,7 +27,7 @@ dev = ["pytest>=8", "ruff>=0.6"]
 rke = "rke.cli:app"
 
 [project.urls]
-Repository = "https://github.com/Guilou001/06-risk-engine-ca"
+Repository = "https://github.com/Guilou001/06-risque-marche"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rke"]
