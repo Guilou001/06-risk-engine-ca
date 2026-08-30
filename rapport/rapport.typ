@@ -20,8 +20,10 @@
 #show quote.where(block: true): it => block(
   inset: (left: 10pt), stroke: (left: 1.5pt + luma(180)),
   text(style: "italic", fill: luma(45), it.body))
+// la table NE DOIT PAS être enfermée dans un par() : Typst 0.15 la supprime alors
+// entièrement, sans erreur. Le réglage se pose donc dans la portée du bloc.
 #show table: it => block(above: 1.1em, below: 1.1em,
-  par(justify: false, text(size: 8.8pt, it)))
+  [#set par(justify: false); #text(size: 8.8pt, it)])
 #show figure: it => block(above: 1.4em, below: 1.4em, it)
 #show figure.caption: it => text(size: 8.5pt, fill: luma(70), it)
 #show link: it => text(fill: rgb("#0072B2"), it)
@@ -30,7 +32,7 @@
   #block(width: 100%)[
     #text(size: 18pt, weight: "bold")[Un moteur de risque canadien : six modèles de VaR jugés par les backtests réglementaires]
     #v(0.6em)
-    #text(size: 10pt, fill: luma(70))[Guillaume Vaudescal · 2026-08-29 · #link("https://github.com/Guilou001/06-risque-marche")[Guilou001/06-risque-marche]]
+    #text(size: 10pt, fill: luma(70))[Guillaume Vaudescal · 2026-08-30 · #link("https://github.com/Guilou001/06-risque-marche")[Guilou001/06-risque-marche]]
   ]
 ]
 #v(1.2em)
