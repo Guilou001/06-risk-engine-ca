@@ -39,6 +39,8 @@
 
 Ce dépôt mesure le risque du portefeuille équilibré canadien du dépôt #link("https://github.com/Guilou001/03-portfolio-ops-ca")[03-portfolio-ops-ca] avec six modèles de VaR et d'Expected Shortfall, puis les fait juger par les quatre backtests que les régulateurs utilisent : Kupiec, Christoffersen, les feux tricolores de Bâle année par année, et Acerbi-Székely pour l'ES.
 
+Le même contenu en PDF : #link("rapport/rapport.pdf")[rapport/rapport.pdf].
+
 *Résultat en une phrase.* Sur 5 476 jours ouvrés hors échantillon (novembre 2004 à août 2026), la *simulation historique filtrée est le seul des six modèles qui passe le test de Kupiec* (69 dépassements pour 54,8 attendus à 99 %, p = 0,063) et le seul sans aucune année en zone rouge de Bâle ; les modèles à queue normale dépassent 121 à 140 fois, et la VaR historique dépasse en grappes, avec 22 dépassements dans la seule année 2008.
 
 _English summary._ A risk engine for the balanced Canadian ETF portfolio of repo 03: six one-day VaR and Expected Shortfall models (historical, Gaussian, Student-t, RiskMetrics EWMA, filtered historical simulation, and a GARCH(1,1) fitted by maximum likelihood written from scratch), backtested over 5,476 out-of-sample days with Kupiec, Christoffersen, year-by-year Basel traffic lights and Acerbi-Székely. Filtered historical simulation is the only model that passes Kupiec coverage (69 violations vs 54.8 expected, p = 0.063) and the only one with zero red Basel years; normal-tail models violate 121 to 140 times, and plain historical VaR violates in clusters (22 times in 2008).

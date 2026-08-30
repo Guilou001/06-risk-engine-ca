@@ -9,6 +9,8 @@ Kupiec, Christoffersen, les feux tricolores de Bâle année par année, et Acerb
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![licence](https://img.shields.io/badge/code-MIT-green)
 
+Le même contenu en PDF : [rapport/rapport.pdf](rapport/rapport.pdf).
+
 **Résultat en une phrase.** Sur 5 476 jours ouvrés hors échantillon (novembre 2004 à août 2026), la
 **simulation historique filtrée est le seul des six modèles qui passe le test de Kupiec** (69
 dépassements pour 54,8 attendus à 99 %, p = 0,063) et le seul sans aucune année en zone rouge de
