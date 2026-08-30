@@ -34,7 +34,7 @@ def backtest(out: Path = Path("results")) -> None:
     """Les six modèles sur tout l'historique : tables de backtests et trois figures."""
     import time
 
-    from rke import backtests, data, figures, models
+    from rke import backtests, classeur, data, figures, models
 
     t0 = time.time()
     returns = data.load_returns()
@@ -74,6 +74,12 @@ def backtest(out: Path = Path("results")) -> None:
     figures.fig_traffic_map(zones, figs / "feux_bale.png")
     figures.fig_reactivity(returns, {k: forecasts_var[k] for k in ("historique", "ewma", "fhs")},
                            "2020-01-01", "2020-09-30", figs / "reactivite_2020.png")
+
+    # Le classeur, à formules vivantes : dans un service de risque on relit un classeur, on change
+    # une case et on regarde le résultat bouger, ce qu'un tableau figé ne permet pas.
+    chemin = classeur.construire(summary_var, zones, out.parent / "reports" / "tests_depassement.xlsx")
+    typer.echo(f"classeur -> {chemin}")
+
     typer.echo(f"{len(returns)} jours, tables -> {tables}, 3 figures -> {figs}, "
                f"durée {time.time() - t0:.0f} s")
 

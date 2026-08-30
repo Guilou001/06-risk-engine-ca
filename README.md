@@ -143,6 +143,31 @@ reculant derrière le GARCH ; la FHS affiche le Z2 le plus proche de zéro (−0
 réalisée sur ES annoncé de 0,97 les jours de dépassement, contre 1,36 pour le gaussien, qui
 sous-estime donc ses pertes de queue d'un bon tiers.
 
+## Le classeur des tests, à formules vivantes
+
+Dans un service de risque, personne ne relit du Python. On relit un classeur, on change une case, et
+on regarde ce que le résultat devient. `reports/tests_depassement.xlsx` permet cela : ses **450
+formules sont écrites en Excel**, rien n'est calculé en Python puis collé.
+
+Trois feuilles. La notice dit ce que le classeur contient. La feuille « Kupiec » refait le test de
+dépassement pour les six modèles, et ses valeurs p redonnent exactement celles de
+`results/tables/backtests_var99.csv`, dont **0,0630 pour la simulation historique filtrée**. La
+feuille « Feux de Bâle » classe chaque année en vert, jaune ou rouge, avec les seuils de 5 et 10
+mis à l'échelle du nombre de jours réellement observés, ce que la formule montre au lieu de le
+cacher.
+
+**Il n'y a pas de macro, et ce n'est pas un oubli.** Un script ne peut pas en écrire : mesuré le
+30 août 2026, un fichier enregistré sous l'extension des classeurs à macros ne contient aucun projet
+de macros, et Excel l'ouvre comme un classeur ordinaire. Le même test est donc livré en Visual Basic
+dans `vba/KupiecTest.bas`, à importer par Alt+F11 puis Fichier, Importer un fichier ; les fonctions
+`KUPIEC` et `ZONE_BALE` deviennent alors disponibles dans les cellules. Le classeur fonctionne
+entièrement sans elles.
+
+Un piège de format a été évité au passage. Les fonctions Excel ajoutées après 2007 doivent porter un
+préfixe technique dans le fichier, faute de quoi Excel affiche une erreur de nom sur chaque cellule.
+Le classeur emploie donc `CHIDIST`, la forme ancienne, qui fonctionne dans toutes les versions, et un
+test le vérifie.
+
 ## 6. Reproduire
 
 ```bash

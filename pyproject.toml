@@ -15,6 +15,7 @@ authors = [{ name = "Guillaume Vaudescal" }]
 requires-python = ">=3.12,<3.13"
 dependencies = [
   "gvf[figures]>=0.2.1",
+  "openpyxl>=3.1",
   "numpy>=1.26",
   "pandas>=2.2",
   "scipy>=1.13",
