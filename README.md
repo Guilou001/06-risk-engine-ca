@@ -1,9 +1,12 @@
-# Un moteur de risque canadien : six modèles de VaR jugés par les backtests réglementaires
+# Mesurer le risque de marché d'un portefeuille canadien
 
-Ce dépôt mesure le risque du portefeuille équilibré canadien du dépôt
-[03-portfolio-ops-ca](https://github.com/Guilou001/03-portfolio-ops-ca) avec six modèles de VaR et
-d'Expected Shortfall, puis les fait juger par les quatre backtests que les régulateurs utilisent :
-Kupiec, Christoffersen, les feux tricolores de Bâle année par année, et Acerbi-Székely pour l'ES.
+Une mesure de risque sert à estimer la perte qu'un portefeuille pourrait subir au cours d'une mauvaise journée. Toutefois, un modèle peut produire un nombre précis et manquer les pertes qu'il devait annoncer. Le présent projet compare donc six modèles sur le même portefeuille canadien et juge leurs prévisions sur des données qu'ils n'ont pas utilisées pour s'ajuster.
+
+Deux mesures sont étudiées. La valeur à risque indique un seuil de perte qui ne devrait être dépassé qu'une fois sur cent. La perte moyenne au-delà de ce seuil décrit ensuite la gravité des journées les plus mauvaises. Les contrôles réglementaires vérifient à la fois le nombre de dépassements et leur concentration dans le temps.
+
+**Résultat principal.** Sur 5 476 jours ouvrés entre novembre 2004 et août 2026, la simulation historique filtrée est le seul des six modèles qui passe le test de fréquence de Kupiec. Elle compte 69 dépassements, contre 54,8 attendus, avec une probabilité critique de 0,063. Elle est également la seule méthode sans année classée en zone rouge par le barème de Bâle. En comparaison, les modèles fondés sur une queue normale manquent entre 121 et 140 pertes.
+
+Afin d'expliquer ce classement, nous présenterons d'abord le portefeuille et les deux mesures de risque. Dans un deuxième temps, nous construirons les six modèles dans l'ordre de leur complexité. Ensuite, nous appliquerons les contrôles de Kupiec, de Christoffersen, de Bâle et d'Acerbi-Székely. Enfin, nous étudierons les années de crise, les limites de chaque méthode et les commandes de reproduction.
 
 [![ci](https://github.com/Guilou001/06-risque-marche/actions/workflows/ci.yml/badge.svg)](https://github.com/Guilou001/06-risque-marche/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
@@ -11,11 +14,8 @@ Kupiec, Christoffersen, les feux tricolores de Bâle année par année, et Acerb
 
 Le même contenu en PDF : [rapport/rapport.pdf](rapport/rapport.pdf).
 
-**Résultat en une phrase.** Sur 5 476 jours ouvrés hors échantillon (novembre 2004 à août 2026), la
-**simulation historique filtrée est le seul des six modèles qui passe le test de Kupiec** (69
-dépassements pour 54,8 attendus à 99 %, p = 0,063) et le seul sans aucune année en zone rouge de
-Bâle ; les modèles à queue normale dépassent 121 à 140 fois, et la VaR historique dépasse en grappes,
-avec 22 dépassements dans la seule année 2008.
+<details>
+<summary>Résumé en anglais</summary>
 
 *English summary.* A risk engine for the balanced Canadian ETF portfolio of repo 03: six one-day VaR
 and Expected Shortfall models (historical, Gaussian, Student-t, RiskMetrics EWMA, filtered historical
@@ -25,7 +25,8 @@ Acerbi-Székely. Filtered historical simulation is the only model that passes Ku
 (69 violations vs 54.8 expected, p = 0.063) and the only one with zero red Basel years; normal-tail
 models violate 121 to 140 times, and plain historical VaR violates in clusters (22 times in 2008).
 
-## 1. La question posée
+</details>
+## 1. La question en détail
 
 Une banque annonce chaque matin sa VaR à 99 %, la perte quotidienne qu'elle ne devrait dépasser
 qu'un jour sur cent. En mots simples : « demain, sauf malchance rare, je ne perdrai pas plus que ce
@@ -44,7 +45,7 @@ et le cadre de Bâle (feux tricolores de 1996, puis la FRTB qui impose l'Expecte
 97,5 %). Ce que ce dépôt apporte :
 
 - **Le juge avant le modèle.** Les six modèles sont soumis aux mêmes 5 476 jours et aux mêmes
-  quatre tests ; aucun chiffre de qualité de modèle n'est affirmé sans son backtest.
+  quatre tests ; aucun chiffre de qualité de modèle n'est affirmé sans son test sur les données passées.
 - **Un GARCH(1,1) écrit et vérifié ici même**, vraisemblance maximisée sans bibliothèque
   spécialisée, avec un test qui retrouve les paramètres d'une série simulée connue.
 - **Aucun regard sur le futur, testé** : la prévision du jour t n'utilise que les jours antérieurs,

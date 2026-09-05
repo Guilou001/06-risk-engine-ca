@@ -1,4 +1,4 @@
-#set document(title: "Un moteur de risque canadien : six modèles de VaR jugés par les backtests réglementaires", author: "Guillaume Vaudescal")
+#set document(title: "Mesurer le risque de marché d'un portefeuille canadien", author: "Guillaume Vaudescal")
 #set page(
   paper: "a4",
   margin: (x: 2.2cm, y: 2.4cm),
@@ -30,24 +30,30 @@
 
 #align(center)[
   #block(width: 100%)[
-    #text(size: 18pt, weight: "bold")[Un moteur de risque canadien : six modèles de VaR jugés par les backtests réglementaires]
+    #text(size: 18pt, weight: "bold")[Mesurer le risque de marché d'un portefeuille canadien]
     #v(0.6em)
-    #text(size: 10pt, fill: luma(70))[Guillaume Vaudescal · 2026-08-30 · #link("https://github.com/Guilou001/06-risque-marche")[Guilou001/06-risque-marche]]
+    #text(size: 10pt, fill: luma(70))[Guillaume Vaudescal · 2026-09-04 · #link("https://github.com/Guilou001/06-risque-marche")[Guilou001/06-risque-marche]]
   ]
 ]
 #v(1.2em)
 #line(length: 100%, stroke: 0.6pt + luma(190))
 #v(0.8em)
 
-Ce dépôt mesure le risque du portefeuille équilibré canadien du dépôt #link("https://github.com/Guilou001/03-portfolio-ops-ca")[03-portfolio-ops-ca] avec six modèles de VaR et d'Expected Shortfall, puis les fait juger par les quatre backtests que les régulateurs utilisent : Kupiec, Christoffersen, les feux tricolores de Bâle année par année, et Acerbi-Székely pour l'ES.
+Une mesure de risque sert à estimer la perte qu'un portefeuille pourrait subir au cours d'une mauvaise journée. Toutefois, un modèle peut produire un nombre précis et manquer les pertes qu'il devait annoncer. Le présent projet compare donc six modèles sur le même portefeuille canadien et juge leurs prévisions sur des données qu'ils n'ont pas utilisées pour s'ajuster.
+
+Deux mesures sont étudiées. La valeur à risque indique un seuil de perte qui ne devrait être dépassé qu'une fois sur cent. La perte moyenne au-delà de ce seuil décrit ensuite la gravité des journées les plus mauvaises. Les contrôles réglementaires vérifient à la fois le nombre de dépassements et leur concentration dans le temps.
+
+*Résultat principal.* Sur 5 476 jours ouvrés entre novembre 2004 et août 2026, la simulation historique filtrée est le seul des six modèles qui passe le test de fréquence de Kupiec. Elle compte 69 dépassements, contre 54,8 attendus, avec une probabilité critique de 0,063. Elle est également la seule méthode sans année classée en zone rouge par le barème de Bâle. En comparaison, les modèles fondés sur une queue normale manquent entre 121 et 140 pertes.
+
+Afin d'expliquer ce classement, nous présenterons d'abord le portefeuille et les deux mesures de risque. Dans un deuxième temps, nous construirons les six modèles dans l'ordre de leur complexité. Ensuite, nous appliquerons les contrôles de Kupiec, de Christoffersen, de Bâle et d'Acerbi-Székely. Enfin, nous étudierons les années de crise, les limites de chaque méthode et les commandes de reproduction.
 
 Le même contenu en PDF : #link("rapport/rapport.pdf")[rapport/rapport.pdf].
 
-*Résultat en une phrase.* Sur 5 476 jours ouvrés hors échantillon (novembre 2004 à août 2026), la *simulation historique filtrée est le seul des six modèles qui passe le test de Kupiec* (69 dépassements pour 54,8 attendus à 99 %, p = 0,063) et le seul sans aucune année en zone rouge de Bâle ; les modèles à queue normale dépassent 121 à 140 fois, et la VaR historique dépasse en grappes, avec 22 dépassements dans la seule année 2008.
+== Résumé en anglais
 
 _English summary._ A risk engine for the balanced Canadian ETF portfolio of repo 03: six one-day VaR and Expected Shortfall models (historical, Gaussian, Student-t, RiskMetrics EWMA, filtered historical simulation, and a GARCH(1,1) fitted by maximum likelihood written from scratch), backtested over 5,476 out-of-sample days with Kupiec, Christoffersen, year-by-year Basel traffic lights and Acerbi-Székely. Filtered historical simulation is the only model that passes Kupiec coverage (69 violations vs 54.8 expected, p = 0.063) and the only one with zero red Basel years; normal-tail models violate 121 to 140 times, and plain historical VaR violates in clusters (22 times in 2008).
 
-== 1. La question posée
+== 1. La question en détail
 
 Une banque annonce chaque matin sa VaR à 99 %, la perte quotidienne qu'elle ne devrait dépasser qu'un jour sur cent. En mots simples : « demain, sauf malchance rare, je ne perdrai pas plus que ce chiffre ». Le régulateur ne juge pas la formule, il compte les dépassements : si la perte réelle excède la VaR annoncée beaucoup plus d'un jour sur cent, ou plusieurs jours de suite, le modèle est faux et le capital exigé monte. La question du dépôt : parmi six façons classiques de calculer cette VaR, lesquelles survivent à vingt-deux ans de données canadiennes réelles, crises de 2008, 2020 et 2022 comprises ?
 
@@ -57,7 +63,7 @@ La boîte à outils vient de quatre papiers et d'un standard d'industrie : RiskM
 
 - *Le juge avant le modèle.* Les six modèles sont soumis aux mêmes 5 476 jours et aux mêmes
 
-quatre tests ; aucun chiffre de qualité de modèle n'est affirmé sans son backtest.
+quatre tests ; aucun chiffre de qualité de modèle n'est affirmé sans son test sur les données passées.
 
 - *Un GARCH(1,1) écrit et vérifié ici même*, vraisemblance maximisée sans bibliothèque
 
@@ -156,6 +162,16 @@ Comment lire cette figure : une ligne par modèle, une colonne par année, le ch
 Comment lire cette figure : les barres grises sont les rendements quotidiens de janvier à septembre 2020, les courbes moins la VaR 99 % de trois modèles. L'historique (bleu) met deux semaines à réagir puis reste figé à 3,2 % jusqu'en mars 2022 ; l'EWMA et la FHS plongent avec le choc (la FHS jusqu'à 13,5 %) puis reviennent en quelques mois. La VaR historique est en retard dans les deux sens : trop basse pendant la crise, trop haute longtemps après.
 
 Sur l'Expected Shortfall à 97,5 %, le niveau de la FRTB (#raw("backtests_es975.csv")) : la FHS reste première (158 dépassements pour 136,9 attendus, p = 0,075) et le gaussien dernier, le Student reculant derrière le GARCH ; la FHS affiche le Z2 le plus proche de zéro (−0,16) et un ratio perte réalisée sur ES annoncé de 0,97 les jours de dépassement, contre 1,36 pour le gaussien, qui sous-estime donc ses pertes de queue d'un bon tiers.
+
+== Le classeur des tests, à formules vivantes
+
+Dans un service de risque, personne ne relit du Python. On relit un classeur, on change une case, et on regarde ce que le résultat devient. #raw("reports/tests_depassement.xlsx") permet cela : ses *450 formules sont écrites en Excel*, rien n'est calculé en Python puis collé.
+
+Trois feuilles. La notice dit ce que le classeur contient. La feuille « Kupiec » refait le test de dépassement pour les six modèles, et ses valeurs p redonnent exactement celles de #raw("results/tables/backtests_var99.csv"), dont *0,0630 pour la simulation historique filtrée*. La feuille « Feux de Bâle » classe chaque année en vert, jaune ou rouge, avec les seuils de 5 et 10 mis à l'échelle du nombre de jours réellement observés, ce que la formule montre au lieu de le cacher.
+
+*Il n'y a pas de macro, et ce n'est pas un oubli.* Un script ne peut pas en écrire : mesuré le 30 août 2026, un fichier enregistré sous l'extension des classeurs à macros ne contient aucun projet de macros, et Excel l'ouvre comme un classeur ordinaire. Le même test est donc livré en Visual Basic dans #raw("vba/KupiecTest.bas"), à importer par Alt+F11 puis Fichier, Importer un fichier ; les fonctions #raw("KUPIEC") et #raw("ZONE_BALE") deviennent alors disponibles dans les cellules. Le classeur fonctionne entièrement sans elles.
+
+Un piège de format a été évité au passage. Les fonctions Excel ajoutées après 2007 doivent porter un préfixe technique dans le fichier, faute de quoi Excel affiche une erreur de nom sur chaque cellule. Le classeur emploie donc #raw("CHIDIST"), la forme ancienne, qui fonctionne dans toutes les versions, et un test le vérifie.
 
 == 6. Reproduire
 
